@@ -3,10 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 //@ http method GET
-//@description its profile get information
+//@description its AUTH get information
 //@access PUBLIC
 router.get("/", (req, res) => {
-  res.send("i am profile router");
+  res.send("i am auth router");
 });
 
 module.exports = router;

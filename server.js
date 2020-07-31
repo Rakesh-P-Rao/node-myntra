@@ -1,30 +1,39 @@
 const express = require("express");
-const app = express();
-const { connect } = require("mongoose");
+const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
-const bodyParser = require("body-parser"); 
+const { connect } = require("mongoose");
+const { PORT, MONGODB_URL } = require("./config");
 
-/*=====================Template engine middleware starts here ===========================*/
+const app = express();
+
+/*=================connect mongodnb database ========================*/
+connect(
+  MONGODB_URL,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    if (err) throw err;
+    console.log("Myntra database connection successfully connected");
+  }
+);
+
+/*==========================Template engine middleware starts here====================*/
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
-/*=====================Template engine middleware ends here ==============================*/
-
-
-/*=====================body parser incoming request stream to convert data ================*/
+/*==========================Template engine middleware ends here====================*/
+//// body parser 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-/*=========================================================================================*/
 
-
-/*===========================serve static assests ==========================================*/
+/*========================server static assets======================================*/
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/node_modules"));
-/*===========================================================================================*/
 
+/*===========================load ROUTES MODULE====================================*/
+app.use("/profile/", require("./Routes/profiles/profile"));
+app.use("/auth/", require("./Routes/auth/auth"));
+app.use("/sports", require("./Routes/products/sports"));
 
-let port = 2700;
-app.listen(port, (err) => {
-    if (err) throw err;
-    console.log("Myntra server is running on port number " + port);
+app.listen(PORT, (err) => {
+  if (err) throw err;
+  console.log("Myntra server is running on port number " + PORT);
 });
-
