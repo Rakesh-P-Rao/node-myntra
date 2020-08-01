@@ -20,13 +20,16 @@ connect(
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 /*==========================Template engine middleware ends here====================*/
-//// body parser 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /*========================server static assets======================================*/
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/node_modules"));
+
+app.get("/", (req, res) => {
+  res.render("./home");
+});
 
 /*===========================load ROUTES MODULE====================================*/
 app.use("/profile/", require("./Routes/profiles/profile"));
